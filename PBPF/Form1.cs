@@ -11,12 +11,15 @@ using System.Windows.Forms;
 using PushbulletSharp;
 using PushbulletSharp.Models.Requests;
 using PushbulletSharp.Models.Responses;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace PBPF {
     public partial class Form1 : Form {
         private int lastLine = -1;
         private int lastEggLine = -1;
         private String lastName = "";
+        dynamic pfSettings;
 
         public Form1() {
             InitializeComponent();
@@ -72,8 +75,12 @@ namespace PBPF {
                 txt_pfLocation.Enabled = true;
                 btn_pfSelector.Enabled = true;
                 btn_StartStop.Text = "Start";
+
+                //delete temp logs
+                File.Delete(txt_pfLocation.Text + "/Logs/PFPB.templog.txt");
+                File.Delete(txt_pfLocation.Text + "/Logs/PFPB.tempegglog.txt");
             } else {
-                sendAlert("Starting!", "PF PB Companion is starting up now!");
+                //sendAlert("Starting!", "PF PB Companion is starting up now!");
                 tim_Ticker.Enabled = true;
                 txt_APIKey.Enabled = false;
                 txt_pfLocation.Enabled = false;
@@ -84,6 +91,12 @@ namespace PBPF {
                 lastLine = -1;
                 lastEggLine = -1;
                 lastName = "";
+
+                //get pf settings
+                String pfSettingsText = File.ReadAllText(txt_pfLocation.Text + "/Cache/Settings.json");
+                pfSettingsText = Regex.Replace(pfSettingsText, @"\.(?=[^""]*""(?:[^""]*""[^""]*"")*[^""]*$)", String.Empty);
+                pfSettings = JObject.Parse(pfSettingsText);
+                Console.WriteLine("Starting for " + pfSettings.farmbuddyloginusername);
             }
 
             //Save settings
@@ -134,13 +147,31 @@ namespace PBPF {
                 lastName = log.Name;
             }
 
-            //parse lines
-            Console.WriteLine("Got " + log.Name + ", starting at line " + lastLine);
+            String caught = "Caught";
+            String CP = "CP(";
+            String IV = "IV(";
 
+            //parse lines
             IEnumerable<String> lines = File.ReadLines(logLoc).Skip(lastLine);
             
-            foreach(String line in lines){
-                Console.WriteLine("Got " + line);
+            foreach(String l in lines){
+                String line = Regex.Replace(l, "<.*?>", String.Empty);
+                //parse phrases
+                if (line.ToLower().Contains(caught.ToLower())) {
+                    String pokemon = line.Substring(line.ToLower().IndexOf(caught.ToLower()) + caught.Length).Trim();
+                    pokemon = pokemon.Substring(0, pokemon.IndexOf(" "));
+                    String cp = line.Substring(line.ToLower().IndexOf(CP.ToLower()) + CP.Length).Trim();
+                    cp = cp.Substring(0, cp.IndexOf(")"));
+                    String iv = line.Substring(line.ToLower().IndexOf(IV.ToLower()) + IV.Length).Trim();
+                    iv = iv.Substring(0, iv.IndexOf(")"));
+
+                    Console.WriteLine(line);
+                    Console.WriteLine(pfSettings.farmbuddyloginusername + " just caught a " + pokemon + " with CP of " + cp + " and IVs at " + iv + "%!");
+
+                    if(chk_CPIV.Checked && (Int32.Parse(cp) >= num_CP.Value || Int32.Parse(iv) >= num_IV.Value)) {
+                        sendAlert("Caught " + pokemon, pfSettings.farmbuddyloginusername + " just caught a " + pokemon + " with CP of " + cp + " and IVs at " + iv + "%!");     
+                    }
+                }
             }
 
             lastLine = logCount;
