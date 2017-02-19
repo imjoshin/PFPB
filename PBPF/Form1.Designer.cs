@@ -50,6 +50,7 @@
             this.chk_5K = new System.Windows.Forms.CheckBox();
             this.btn_StartStop = new System.Windows.Forms.Button();
             this.tim_Ticker = new System.Windows.Forms.Timer(this.components);
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.grp_General.SuspendLayout();
             this.grp_Notifications.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -332,8 +333,16 @@
             // 
             // tim_Ticker
             // 
-            this.tim_Ticker.Interval = 500;
+            this.tim_Ticker.Interval = 1000;
             this.tim_Ticker.Tick += new System.EventHandler(this.tim_Ticker_Tick);
+            // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipText = "The PF PushBullet Companion was minimized! Double click this to open it again.";
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "PF PushBullet Companion";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // Form1
             // 
@@ -349,6 +358,7 @@
             this.MaximumSize = new System.Drawing.Size(304, 380);
             this.MinimumSize = new System.Drawing.Size(304, 380);
             this.Name = "Form1";
+            this.ShowInTaskbar = false;
             this.Text = "PF PushBullet Companion";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.grp_General.ResumeLayout(false);
@@ -390,6 +400,7 @@
         private System.Windows.Forms.CheckBox chk_5K;
         private System.Windows.Forms.Button btn_StartStop;
         private System.Windows.Forms.Timer tim_Ticker;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 

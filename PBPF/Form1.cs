@@ -11,6 +11,10 @@ using System.Windows.Forms;
 
 namespace PBPF {
     public partial class Form1 : Form {
+        private int lastLine = -1;
+        private int lastEggLine = -1;
+        private String lastName = "";
+
         public Form1() {
             InitializeComponent();
         }
@@ -71,6 +75,11 @@ namespace PBPF {
                 txt_pfLocation.Enabled = false;
                 btn_pfSelector.Enabled = false;
                 btn_StartStop.Text = "Stop";
+
+                //reset vars
+                lastLine = -1;
+                lastEggLine = -1;
+                lastName = "";
             }
 
             //Save settings
@@ -88,11 +97,50 @@ namespace PBPF {
             Properties.Settings.Default.CP = (int) num_CP.Value;
             Properties.Settings.Default.IV = (int) num_IV.Value;
             Properties.Settings.Default.Save();
-
+        }
+     
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
+            //Tray icon click  
+            Show();
+            WindowState = FormWindowState.Normal;
         }
 
         private void tim_Ticker_Tick(object sender, EventArgs e) {
 
+            String logLoc = txt_pfLocation.Text + "/Logs/PFPB.templog.txt";
+            String eggLoc = txt_pfLocation.Text + "/Logs/PFPB.tempegglog.txt";
+
+            DirectoryInfo dir = new DirectoryInfo(txt_pfLocation.Text + "/Logs");
+            FileInfo log = (from f in dir.GetFiles() where f.Name != "HatchedEggLog.txt" orderby f.LastWriteTime descending select f).First();
+
+            //create copies to use
+            try {
+                File.Copy(txt_pfLocation.Text + "/Logs/" + log.Name, logLoc, true);
+                File.Copy(txt_pfLocation.Text + "/Logs/HatchedEggLog.txt", eggLoc, true);
+            } catch { }
+
+
+            int logCount = File.ReadLines(logLoc).Count();
+            int eggCount = File.ReadLines(eggLoc).Count();
+
+            //log file changed
+            if (log.Name != lastName) {
+                lastLine = logCount;
+                lastEggLine = eggCount;
+                lastName = log.Name;
+            }
+
+            //parse lines
+            Console.WriteLine("Got " + log.Name + ", starting at line " + lastLine);
+
+            IEnumerable<String> lines = File.ReadLines(logLoc).Skip(lastLine);
+            
+            foreach(String line in lines){
+                Console.WriteLine("Got " + line);
+            }
+
+            lastLine = logCount;
+            lastEggLine = eggCount;
         }
     }
 }
