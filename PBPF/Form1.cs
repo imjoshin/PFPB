@@ -8,6 +8,9 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PushbulletSharp;
+using PushbulletSharp.Models.Requests;
+using PushbulletSharp.Models.Responses;
 
 namespace PBPF {
     public partial class Form1 : Form {
@@ -70,6 +73,7 @@ namespace PBPF {
                 btn_pfSelector.Enabled = true;
                 btn_StartStop.Text = "Start";
             } else {
+                sendAlert("Starting!", "PF PB Companion is starting up now!");
                 tim_Ticker.Enabled = true;
                 txt_APIKey.Enabled = false;
                 txt_pfLocation.Enabled = false;
@@ -141,6 +145,22 @@ namespace PBPF {
 
             lastLine = logCount;
             lastEggLine = eggCount;
+        }
+
+        private void sendAlert(String title, String text) {
+            PushbulletClient client = new PushbulletClient(txt_APIKey.Text);
+
+            var currentUserInformation = client.CurrentUsersInformation();
+
+            if (currentUserInformation != null) {
+                PushNoteRequest reqeust = new PushNoteRequest() {
+                    Email = currentUserInformation.Email,
+                    Title = title,
+                    Body = text
+                };
+
+                PushResponse response = client.PushNote(reqeust);
+            }
         }
     }
 }

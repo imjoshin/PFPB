@@ -33,6 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\PushBulletSharp.3.0.1\lib\portable-windows8+net45\BouncyCastle.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PushbulletSharp, Version=3.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PushBulletSharp.3.0.1\lib\portable-windows8+net45\PushbulletSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +75,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
