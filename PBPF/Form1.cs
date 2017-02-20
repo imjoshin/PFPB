@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 
 namespace PBPF {
     public partial class Form1 : Form {
-        Boolean DEBUG = true;
+        Boolean DEBUG = false;
         private int lastLine = -1;
         private int lastEggLine = -1;
         private String lastName = "";
@@ -156,7 +156,7 @@ namespace PBPF {
             String level = "Level up";
 
             //parse log lines
-            IEnumerable<String> lines = File.ReadLines(logLoc);//.Skip(lastLine);
+            IEnumerable<String> lines = File.ReadLines(logLoc).Skip(lastLine);
             
             foreach(String l in lines){
                 String line = Regex.Replace(l, "<.*?>", String.Empty);
