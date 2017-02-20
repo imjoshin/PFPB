@@ -203,8 +203,7 @@ namespace PBPF {
 
             //parse egg lines
             if (chk_Egg.Checked) {
-                lines = File.ReadLines(eggLoc);//.Skip(lastEggLine);
-                int i = 0;
+                lines = File.ReadLines(eggLoc).Skip(lastEggLine);
                 foreach (String l in lines) {
                     String line = Regex.Replace(l, "<.*?>", String.Empty);
 
@@ -225,16 +224,12 @@ namespace PBPF {
 
                         sendAlert(pokemon + " Hatched!", pokemon + " hatched from a " + eggType + " egg with an IV of " + iv + "!");
                     }
-
-                    i++;
-                    if (i > 4) break;
                 }
             }
 
+            //set new positions
             lastLine = logCount;
             lastEggLine = eggCount;
-
-            btn_StartStop_Click(sender, e);
         }
 
         private void sendAlert(String title, String text) {
@@ -250,8 +245,7 @@ namespace PBPF {
                 };
 
                 txt_Log.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - " + text + "\r\n");
-                //PushResponse response = client.PushNote(reqeust);
-                //txt_Log.Text = txt_Log.Text + "\n" + DateTime.Now.ToString("HH:mm:ss") + " - " + text;
+                PushResponse response = client.PushNote(reqeust);
             }
         }
     }
