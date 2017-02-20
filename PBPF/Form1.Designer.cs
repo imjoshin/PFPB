@@ -51,6 +51,8 @@
             this.btn_StartStop = new System.Windows.Forms.Button();
             this.tim_Ticker = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.txt_Log = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.grp_General.SuspendLayout();
             this.grp_Notifications.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -125,7 +127,7 @@
             this.grp_Notifications.Controls.Add(this.chk_Level);
             this.grp_Notifications.Location = new System.Drawing.Point(13, 93);
             this.grp_Notifications.Name = "grp_Notifications";
-            this.grp_Notifications.Size = new System.Drawing.Size(263, 94);
+            this.grp_Notifications.Size = new System.Drawing.Size(263, 69);
             this.grp_Notifications.TabIndex = 6;
             this.grp_Notifications.TabStop = false;
             this.grp_Notifications.Text = "Notifications";
@@ -135,7 +137,7 @@
             this.chk_Rare.AutoSize = true;
             this.chk_Rare.Checked = true;
             this.chk_Rare.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk_Rare.Location = new System.Drawing.Point(108, 69);
+            this.chk_Rare.Location = new System.Drawing.Point(108, 46);
             this.chk_Rare.Name = "chk_Rare";
             this.chk_Rare.Size = new System.Drawing.Size(86, 17);
             this.chk_Rare.TabIndex = 6;
@@ -147,7 +149,7 @@
             this.chk_CPIV.AutoSize = true;
             this.chk_CPIV.Checked = true;
             this.chk_CPIV.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk_CPIV.Location = new System.Drawing.Point(108, 46);
+            this.chk_CPIV.Location = new System.Drawing.Point(108, 23);
             this.chk_CPIV.Name = "chk_CPIV";
             this.chk_CPIV.Size = new System.Drawing.Size(126, 17);
             this.chk_CPIV.TabIndex = 5;
@@ -159,12 +161,13 @@
             this.chk_Bot.AutoSize = true;
             this.chk_Bot.Checked = true;
             this.chk_Bot.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk_Bot.Location = new System.Drawing.Point(108, 23);
+            this.chk_Bot.Location = new System.Drawing.Point(108, 69);
             this.chk_Bot.Name = "chk_Bot";
             this.chk_Bot.Size = new System.Drawing.Size(94, 17);
             this.chk_Bot.TabIndex = 4;
             this.chk_Bot.Text = "Bot Start/Stop";
             this.chk_Bot.UseVisualStyleBackColor = true;
+            this.chk_Bot.Visible = false;
             // 
             // chk_Captcha
             // 
@@ -177,6 +180,7 @@
             this.chk_Captcha.TabIndex = 3;
             this.chk_Captcha.Text = "Captcha";
             this.chk_Captcha.UseVisualStyleBackColor = true;
+            this.chk_Captcha.Visible = false;
             // 
             // chk_Egg
             // 
@@ -213,7 +217,7 @@
             this.groupBox1.Controls.Add(this.chk_10K);
             this.groupBox1.Controls.Add(this.chk_2K);
             this.groupBox1.Controls.Add(this.chk_5K);
-            this.groupBox1.Location = new System.Drawing.Point(13, 193);
+            this.groupBox1.Location = new System.Drawing.Point(13, 168);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(263, 110);
             this.groupBox1.TabIndex = 7;
@@ -323,12 +327,14 @@
             // 
             // btn_StartStop
             // 
-            this.btn_StartStop.Location = new System.Drawing.Point(12, 309);
+            this.btn_StartStop.BackColor = System.Drawing.Color.PaleGreen;
+            this.btn_StartStop.ForeColor = System.Drawing.Color.Black;
+            this.btn_StartStop.Location = new System.Drawing.Point(14, 410);
             this.btn_StartStop.Name = "btn_StartStop";
             this.btn_StartStop.Size = new System.Drawing.Size(264, 23);
             this.btn_StartStop.TabIndex = 8;
             this.btn_StartStop.Text = "Start";
-            this.btn_StartStop.UseVisualStyleBackColor = true;
+            this.btn_StartStop.UseVisualStyleBackColor = false;
             this.btn_StartStop.Click += new System.EventHandler(this.btn_StartStop_Click);
             // 
             // tim_Ticker
@@ -344,19 +350,42 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
+            // txt_Log
+            // 
+            this.txt_Log.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_Log.Location = new System.Drawing.Point(14, 301);
+            this.txt_Log.Multiline = true;
+            this.txt_Log.Name = "txt_Log";
+            this.txt_Log.ReadOnly = true;
+            this.txt_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txt_Log.Size = new System.Drawing.Size(263, 103);
+            this.txt_Log.TabIndex = 9;
+            this.txt_Log.WordWrap = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(22, 285);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(67, 13);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Pushes Sent";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(288, 341);
+            this.ClientSize = new System.Drawing.Size(288, 439);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txt_Log);
             this.Controls.Add(this.btn_StartStop);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grp_Notifications);
             this.Controls.Add(this.grp_General);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(304, 380);
-            this.MinimumSize = new System.Drawing.Size(304, 380);
+            this.MaximumSize = new System.Drawing.Size(304, 478);
+            this.MinimumSize = new System.Drawing.Size(304, 478);
             this.Name = "Form1";
             this.ShowInTaskbar = false;
             this.Text = "PF PB Companion";
@@ -370,6 +399,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.num_IV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_CP)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -401,6 +431,8 @@
         private System.Windows.Forms.Button btn_StartStop;
         private System.Windows.Forms.Timer tim_Ticker;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.TextBox txt_Log;
+        private System.Windows.Forms.Label label7;
     }
 }
 

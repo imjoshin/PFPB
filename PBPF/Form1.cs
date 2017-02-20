@@ -75,6 +75,7 @@ namespace PBPF {
                 txt_pfLocation.Enabled = true;
                 btn_pfSelector.Enabled = true;
                 btn_StartStop.Text = "Start";
+                btn_StartStop.BackColor = Color.PaleGreen;
 
                 //delete temp logs
                 File.Delete(txt_pfLocation.Text + "/Logs/PFPB.templog.txt");
@@ -86,6 +87,7 @@ namespace PBPF {
                 txt_pfLocation.Enabled = false;
                 btn_pfSelector.Enabled = false;
                 btn_StartStop.Text = "Stop";
+                btn_StartStop.BackColor = Color.LightCoral;
 
                 //reset vars
                 lastLine = -1;
@@ -201,7 +203,8 @@ namespace PBPF {
 
             //parse egg lines
             if (chk_Egg.Checked) {
-                lines = File.ReadLines(eggLoc).Skip(lastEggLine);
+                lines = File.ReadLines(eggLoc);//.Skip(lastEggLine);
+                int i = 0;
                 foreach (String l in lines) {
                     String line = Regex.Replace(l, "<.*?>", String.Empty);
 
@@ -222,12 +225,16 @@ namespace PBPF {
 
                         sendAlert(pokemon + " Hatched!", pokemon + " hatched from a " + eggType + " egg with an IV of " + iv + "!");
                     }
-                    
+
+                    i++;
+                    if (i > 4) break;
                 }
             }
 
             lastLine = logCount;
             lastEggLine = eggCount;
+
+            btn_StartStop_Click(sender, e);
         }
 
         private void sendAlert(String title, String text) {
@@ -242,7 +249,9 @@ namespace PBPF {
                     Body = text
                 };
 
-                PushResponse response = client.PushNote(reqeust);
+                txt_Log.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - " + text + "\r\n");
+                //PushResponse response = client.PushNote(reqeust);
+                //txt_Log.Text = txt_Log.Text + "\n" + DateTime.Now.ToString("HH:mm:ss") + " - " + text;
             }
         }
     }
