@@ -359,7 +359,7 @@
             this.MinimumSize = new System.Drawing.Size(304, 380);
             this.Name = "Form1";
             this.ShowInTaskbar = false;
-            this.Text = "PF PushBullet Companion";
+            this.Text = "PF PB Companion";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.grp_General.ResumeLayout(false);
             this.grp_General.PerformLayout();

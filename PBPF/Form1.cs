@@ -150,6 +150,7 @@ namespace PBPF {
             String caught = "Caught";
             String CP = "CP(";
             String IV = "IV(";
+            String level = "Level up";
 
             //parse lines
             IEnumerable<String> lines = File.ReadLines(logLoc).Skip(lastLine);
@@ -157,6 +158,8 @@ namespace PBPF {
             foreach(String l in lines){
                 String line = Regex.Replace(l, "<.*?>", String.Empty);
                 //parse phrases
+
+                //caught pokemon, look for cp/iv/rare
                 if (line.ToLower().Contains(caught.ToLower())) {
                     String pokemon = line.Substring(line.ToLower().IndexOf(caught.ToLower()) + caught.Length).Trim();
                     pokemon = pokemon.Substring(0, pokemon.IndexOf(" "));
@@ -165,12 +168,30 @@ namespace PBPF {
                     String iv = line.Substring(line.ToLower().IndexOf(IV.ToLower()) + IV.Length).Trim();
                     iv = iv.Substring(0, iv.IndexOf(")"));
 
-                    Console.WriteLine(line);
-                    Console.WriteLine(pfSettings.farmbuddyloginusername + " just caught a " + pokemon + " with CP of " + cp + " and IVs at " + iv + "%!");
+                    Boolean isRare = false;
 
-                    if(chk_CPIV.Checked && (Int32.Parse(cp) >= num_CP.Value || Int32.Parse(iv) >= num_IV.Value)) {
+                    using (var webClient = new System.Net.WebClient()) {
+                        String pokemonJSonText = webClient.DownloadString("http://pokeapi.co/api/v2/pokemon/" + pokemon.ToLower());
+                        dynamic pokemonJSon = JObject.Parse(pokemonJSonText);
+
+                        string rareText = pfSettings.farmbuddybotrarepokemon;
+                        foreach(String id in rareText.Split(',')) {
+                            if(Int32.Parse(id) == Int32.Parse(pokemonJSon.id)) {
+                                isRare = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ((chk_CPIV.Checked && (Int32.Parse(cp) >= num_CP.Value || Int32.Parse(iv) >= num_IV.Value)) || 
+                        (chk_Rare.Checked && isRare)) {
                         sendAlert("Caught " + pokemon, pfSettings.farmbuddyloginusername + " just caught a " + pokemon + " with CP of " + cp + " and IVs at " + iv + "%!");     
                     }
+                }
+
+                //Level up
+                else if (line.ToLower().Contains(level.ToLower())) {
+                    sendAlert("Leveled up!", pfSettings.farmbuddyloginusername + " just leveled up!");
                 }
             }
 
