@@ -152,7 +152,7 @@ namespace PBPF {
             String IV = "IV(";
             String level = "Level up";
 
-            //parse lines
+            //parse log lines
             IEnumerable<String> lines = File.ReadLines(logLoc).Skip(lastLine);
             
             foreach(String l in lines){
@@ -161,6 +161,7 @@ namespace PBPF {
 
                 //caught pokemon, look for cp/iv/rare
                 if (line.ToLower().Contains(caught.ToLower())) {
+                    //extract parts
                     String pokemon = line.Substring(line.ToLower().IndexOf(caught.ToLower()) + caught.Length).Trim();
                     pokemon = pokemon.Substring(0, pokemon.IndexOf(" "));
                     String cp = line.Substring(line.ToLower().IndexOf(CP.ToLower()) + CP.Length).Trim();
@@ -169,8 +170,9 @@ namespace PBPF {
                     iv = iv.Substring(0, iv.IndexOf(")"));
 
                     Boolean isRare = false;
-
+                    //check if is rare
                     using (var webClient = new System.Net.WebClient()) {
+                        //get id from name online
                         String pokemonJSonText = webClient.DownloadString("http://pokeapi.co/api/v2/pokemon/" + pokemon.ToLower());
                         dynamic pokemonJSon = JObject.Parse(pokemonJSonText);
 
@@ -183,15 +185,38 @@ namespace PBPF {
                         }
                     }
 
+                    //send if conditions met
                     if ((chk_CPIV.Checked && (Int32.Parse(cp) >= num_CP.Value || Int32.Parse(iv) >= num_IV.Value)) || 
                         (chk_Rare.Checked && isRare)) {
-                        sendAlert("Caught " + pokemon, pfSettings.farmbuddyloginusername + " just caught a " + pokemon + " with CP of " + cp + " and IVs at " + iv + "%!");     
+                        sendAlert("Caught " + pokemon, pfSettings.farmbuddyloginusername + " just caught " + pokemon + " with CP of " + cp + " and an IV of " + iv + "!");     
                     }
                 }
 
                 //Level up
-                else if (line.ToLower().Contains(level.ToLower())) {
+                else if (chk_Level.Checked && line.ToLower().Contains(level.ToLower())) {
                     sendAlert("Leveled up!", pfSettings.farmbuddyloginusername + " just leveled up!");
+                }
+            }
+
+
+            //parse egg lines
+            if (chk_Egg.Checked) {
+                lines = File.ReadLines(eggLoc).Skip(lastEggLine);
+                foreach (String l in lines) {
+                    String line = Regex.Replace(l, "<.*?>", String.Empty);
+
+                    //not hatched pokemon line
+                    if (line.IndexOf("'") < 0 || line.IndexOf("KM") < 0) continue;
+
+                    //extract parts
+                    String pokemon = line.Substring(line.IndexOf("'") + 1);
+                    pokemon = pokemon.Substring(0, pokemon.IndexOf(" "));
+                    String iv = line.Substring(line.IndexOf("\"") + 1);
+                    iv = iv.Substring(0, iv.IndexOf("\""));
+                    String eggType = line.Substring(line.IndexOf("\"", line.IndexOf("KM") - 4) + 1);
+                    eggType = eggType.Substring(0, eggType.IndexOf("\""));
+                    
+                    sendAlert(pokemon + " Hatched!", pokemon + " hatched from a " + eggType + " egg with an IV of " + iv + "!");
                 }
             }
 
