@@ -215,8 +215,14 @@ namespace PBPF {
                     iv = iv.Substring(0, iv.IndexOf("\""));
                     String eggType = line.Substring(line.IndexOf("\"", line.IndexOf("KM") - 4) + 1);
                     eggType = eggType.Substring(0, eggType.IndexOf("\""));
+
+                    if(eggType.CompareTo("2 KM") == 0 && chk_2K.Checked ||
+                       eggType.CompareTo("5 KM") == 0 && chk_5K.Checked ||
+                       eggType.CompareTo("10 KM") == 0 && chk_10K.Checked) {
+
+                        sendAlert(pokemon + " Hatched!", pokemon + " hatched from a " + eggType + " egg with an IV of " + iv + "!");
+                    }
                     
-                    sendAlert(pokemon + " Hatched!", pokemon + " hatched from a " + eggType + " egg with an IV of " + iv + "!");
                 }
             }
 
